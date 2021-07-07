@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+    <title>Projeto da Raiza</title>
+</head>
+
 <style>
     .table {
         font-family: Arial, Helvetica, sans-serif;
@@ -27,41 +31,62 @@
 </style>
 <body>
 
+    <a href="https://www.google.com" target="_blank" >Click aqui para o Google</a>
+
 <h1>Projeto Raiza</h1>
 <p>Controle de Gastos Mensais</p>
-<div>
-    <label for="name">Nome</label>
-    <input type="text" id="name" name="name">
-    <label for="valor">Valor</label>
-    <input type="number" id="valor" name="valor">
-    <label for="tipo">Tipo</label>
-    <select name="tipo" id="tipo">
-        <option value="Alimentação">Alimentação</option>
-        <option value="Saúde">Saúde</option>
-        <option value="Educação">Educação</option>
-        <option value="Diversos">Diversos</option>
-    </select>
-    <button type="button" onclick="save()">Criar</button>
-   
-<br>
-<hr>
-<br>
 
-<table class="table" id="tabelaDeGastos">
-    <tr>
-        <th>Nome</th>
-        <th>Valor</th>
-        <th>Tipo</th>
-    </tr>
-</table>
+    <div>
+        <label for="name"></label>Nome
+        <input type="text" id="name" name="name">
+        <label for="valor">Valor</label>
+        <input type="number" id="valor" name="valor">
+        <label for="tipo">Tipo</label>
+        <select name="tipo" id="tipo">
+            <option value="Alimentação">Alimentação</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Educação">Educação</option>
+            <option value="Diversos">Diversos</option>
+        </select>
+        <button type="button" onclick="save()">Criar</button>
+    
+        <br>
+        <hr>
+        <br>
 
+        <table class="table" id="tabelaDeGastos">
+            <tr>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Tipo</th>
+            </tr>
+        </table>
 
-
-</div>
+        <h3>Total: R$ <span id="totalDasSomas">0</span></h3>
+    </div>
 </body>
 </html>
 
 <script>
+
+    function fazerSoma () {
+
+        gastosStorage = window.localStorage.getItem("gastos")
+        gastos = gastosStorage ? JSON.parse(gastosStorage) : []
+
+        soma = 0;
+
+        gastos.forEach(function(gasto) {
+            soma = soma + parseInt(gasto.valor);
+        });
+
+        spanTotal = document.getElementById('totalDasSomas');
+        
+        spanTotal.innerHTML = soma;
+
+    }
+
+
 
     function carregar() {
         gastosStorage = window.localStorage.getItem("gastos")
@@ -70,6 +95,8 @@
         gastos.forEach(function(gasto) {
             criarLinha(gasto.name, gasto.valor, gasto.tipo);
         });
+
+        fazerSoma();
     }
 
     carregar();
@@ -103,6 +130,9 @@
         window.localStorage.setItem("gastos", JSON.stringify(gastos))
 
         criarLinha(name, valor, tipo);
+
+        fazerSoma();
+    
     }
 
     function criarLinha(name, valor, tipo) {
